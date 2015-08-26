@@ -1,0 +1,22 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<history>
+   <processor signature="arm-none-eabi-gcc -mcpu=cortex-m0 -mthumb -g -nostartfiles -Map=sunrise_STM32F0.map -O0 --gc-sections -LC:\CooCox\CoIDE\configuration\ProgramData\sunrise_STM32F0 -TC:\CooCox\CoIDE\configuration\ProgramData\sunrise_STM32F0/arm-gcc-link.ld -g">
+      <target file="sunrise_STM32F0.elf" lastModified="14f6bb82fda">
+         <source file="..\obj\delay.o" lastModified="14f6bb7d547"/>
+         <source file="..\obj\stm32f0xx_rcc.o" lastModified="14f6bb7d590"/>
+         <source file="..\obj\stm32f0xx_adc.o" lastModified="14f6bb7d5ca"/>
+         <source file="..\obj\stm32f0xx_iwdg.o" lastModified="14f6bb7d5f1"/>
+         <source file="..\obj\main.o" lastModified="14f6bb82dc3"/>
+         <source file="..\obj\startup_stm32f0xx.o" lastModified="14f6bb7d624"/>
+         <source file="..\obj\stm32f0xx_dma.o" lastModified="14f6bb7d653"/>
+         <source file="..\obj\stm32f0xx_gpio.o" lastModified="14f6bb7d686"/>
+         <source file="..\obj\stm32f0xx_rtc.o" lastModified="14f6bb7d6e5"/>
+         <source file="..\obj\stm32f0xx_usart.o" lastModified="14f6bb7d733"/>
+         <source file="..\obj\stm32f0xx_tim.o" lastModified="14f6bb7d7b4"/>
+         <source file="..\obj\system_stm32f0xx.o" lastModified="14f6bb7d7e0"/>
+         <source file="..\obj\stm32f0xx_exti.o" lastModified="14f6bb7d80b"/>
+         <source file="..\obj\stm32f0xx_syscfg.o" lastModified="14f6bb7d836"/>
+         <source file="..\obj\stm32f0xx_misc.o" lastModified="14f6bb7d85b"/>
+      </target>
+   </processor>
+</history>
