@@ -2,12 +2,22 @@
 #include "stm32f0xx_conf.h"
 #include "delay.h"
 
-void Led_Init( void );
-void Led_Flash_StartUp( void );
-void USART2_Init( void );
-void ADC_DMA_Init(void);
+//------------------------------------------------------------------------------------------------------------------------//
+#define BUFFER_SIZE 3
 
-uint8_t dummy;
+//------------------------------------------------------------------------------------------------------------------------//
+void TIM2_IRQHandler( void );
+void Led_Init( void );
+void USART2_Init( void );
+void Led_Flash_StartUp( void );
+void TIM2_Init( void );
+void ADC_DMA_Init(void);
+void GPIO_ToggleBits(GPIO_TypeDef* GPIOx, uint16_t GPIO_Pin);
+
+//------------------------------------------------------------------------------------------------------------------------//
+uint16_t a_pot_value[BUFFER_SIZE];
+volatile uint8_t process = 0;
+volatile uint8_t counter = 0;
 
 
 //------------------------------------------------------------------------------------------------------------------------//
@@ -17,19 +27,54 @@ int main(void)
 
 	Led_Init();
 	USART2_Init();
-	ADC_DMA_Init();
 	Led_Flash_StartUp();
+
+	// Init TIMERS
+
+	TIM2_Init();			// Controller Sampling period
+
+	// Init ADC
+
+	ADC_DMA_Init();
+	ADC_StartOfConversion(ADC1);
 
     while(1)
     {
-    	static uint8_t counter = 0;
+    	while(process)
+		{
+    		uint16_t g_pot_red    = a_pot_value[0];
+    		uint16_t g_pot_green  = a_pot_value[1];
+    		uint16_t g_pot_blue   = a_pot_value[2];
 
-    	counter++;
+    		if (g_pot_blue > 50 || g_pot_red > 50 || g_pot_green > 50 )
+    		{
+    			GPIO_SetBits(GPIOA, GPIO_Pin_5);
+    		}
+    		else
+    		{
+    			GPIO_ResetBits(GPIOA, GPIO_Pin_5);
+    		}
 
-    	delay_nms(1000);
+			process = 0;
+			//IWDG_ReloadCounter();
+		}
     }
 }
 
+
+//------------------------------------------------------------------------------------------------------------------------//
+void TIM2_IRQHandler( void )
+{
+	if (TIM_GetITStatus(TIM2, TIM_IT_Update) != RESET)
+	{
+		process = 1;
+		counter++;
+		TIM_ClearITPendingBit(TIM2, TIM_IT_Update);
+	}
+}
+
+
+//------------------------------------------------------------------------------------------------------------------------//
 void Led_Init( void )
 {
 	// Create struct for all GPIO parameters
@@ -46,20 +91,8 @@ void Led_Init( void )
 	GPIO_Init(GPIOA, &GPIO_InitStructure);
 }
 
-void Led_Flash_StartUp( void )
-{
-	GPIO_ResetBits(GPIOA, GPIO_Pin_5);
-	delay_nms(5);
-	GPIO_SetBits(GPIOA, GPIO_Pin_5);
-	delay_nms(500);
-	GPIO_ResetBits(GPIOA, GPIO_Pin_5);
-	delay_nms(500);
-	GPIO_SetBits(GPIOA, GPIO_Pin_5);
-	delay_nms(500);
-	GPIO_ResetBits(GPIOA, GPIO_Pin_5);
-	delay_nms(500);
-}
 
+//------------------------------------------------------------------------------------------------------------------------//
 void USART2_Init( void )
 {
 	GPIO_InitTypeDef 	GPIO_InitStructure;
@@ -103,7 +136,60 @@ void USART2_Init( void )
 	delay_nms(1000);
 }
 
-void ADC_DMA_Init(void)
+
+//------------------------------------------------------------------------------------------------------------------------//
+void Led_Flash_StartUp( void )
+{
+	GPIO_ResetBits(GPIOA, GPIO_Pin_5);
+	delay_nms(5);
+	GPIO_SetBits(GPIOA, GPIO_Pin_5);
+	delay_nms(500);
+	GPIO_ResetBits(GPIOA, GPIO_Pin_5);
+	delay_nms(500);
+	GPIO_SetBits(GPIOA, GPIO_Pin_5);
+	delay_nms(500);
+	GPIO_ResetBits(GPIOA, GPIO_Pin_5);
+	delay_nms(500);
+}
+
+
+//------------------------------------------------------------------------------------------------------------------------//
+void TIM2_Init( void )
+{
+	NVIC_InitTypeDef 			NVIC_InitStructure;
+	TIM_TimeBaseInitTypeDef		TIM_TimeBaseStructure;
+
+	// Enable the TIM2 global Interrupt
+
+	NVIC_InitStructure.NVIC_IRQChannel = TIM2_IRQn;
+	NVIC_InitStructure.NVIC_IRQChannelPriority = 0;
+	NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
+	NVIC_Init(&NVIC_InitStructure);
+
+	// TIM2 clock enable
+
+	RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM2, ENABLE);
+
+	// Time base configuration
+
+	TIM_TimeBaseStructure.TIM_Period = 1000000 - 1; 							// TS in µs
+	TIM_TimeBaseStructure.TIM_Prescaler = (SystemCoreClock / 1000000) - 1;	// 48 MHz Clock down to 1 MHz
+	TIM_TimeBaseStructure.TIM_ClockDivision = 0;
+	TIM_TimeBaseStructure.TIM_CounterMode = TIM_CounterMode_Up;
+	TIM_TimeBaseInit(TIM2, &TIM_TimeBaseStructure);
+
+	// TIM IT enable
+
+	TIM_ITConfig(TIM2, TIM_IT_Update, ENABLE);
+
+	// TIM2 enable counter
+
+	TIM_Cmd(TIM2, ENABLE);
+}
+
+
+//------------------------------------------------------------------------------------------------------------------------//
+void ADC_DMA_Init( void )
 {
 	ADC_InitTypeDef       ADC_InitStructure;
 	DMA_InitTypeDef       DMA_InitStructure;
@@ -127,10 +213,10 @@ void ADC_DMA_Init(void)
 
 	// DMA1 Channel 1 configuration
 
-	DMA_InitStructure.DMA_PeripheralBaseAddr = (uint32_t)0x40012400;
-	DMA_InitStructure.DMA_MemoryBaseAddr = (uint32_t)&ADC_buffer;
-	DMA_InitStructure.DMA_DIR = DMA_DIR_PeripheralToMemory;
-	DMA_InitStructure.DMA_BufferSize = 3;
+	DMA_InitStructure.DMA_PeripheralBaseAddr = (uint32_t)&ADC1->DR;
+	DMA_InitStructure.DMA_MemoryBaseAddr = (uint32_t)&a_pot_value[0];
+	DMA_InitStructure.DMA_DIR = DMA_DIR_PeripheralSRC;
+	DMA_InitStructure.DMA_BufferSize = BUFFER_SIZE;
 	DMA_InitStructure.DMA_PeripheralInc = DMA_PeripheralInc_Disable;
 	DMA_InitStructure.DMA_MemoryInc = DMA_MemoryInc_Enable;
 	DMA_InitStructure.DMA_PeripheralDataSize = DMA_PeripheralDataSize_HalfWord;
@@ -141,44 +227,47 @@ void ADC_DMA_Init(void)
 	DMA_Init(DMA1_Channel1, &DMA_InitStructure);
 
 	// DMA1 Channel 1 enable
-
 	DMA_Cmd(DMA1_Channel1, ENABLE);
 
-	// ADC Common Init
+	// Enable ADC1 DMA
+	ADC_DMACmd(ADC1, ENABLE);
+
+	// Enable DMA request after last transfer (Single-ADC mode)
+	ADC_DMARequestModeConfig(ADC1, ADC_DMAMode_Circular);
 
 	ADC_DeInit(ADC1);
 
-	ADC_CommonInitStructure.ADC_Mode = ADC_Mode_Independent;
-	ADC_CommonInitStructure.ADC_Prescaler = ADC_Prescaler_Div2;
-	ADC_CommonInitStructure.ADC_DMAAccessMode = ADC_DMAAccessMode_Disabled;
-	ADC_CommonInitStructure.ADC_TwoSamplingDelay = ADC_TwoSamplingDelay_20Cycles;
-	ADC_CommonInit(&ADC_CommonInitStructure);
-
 	// ADC1 Init
-
-	ADC_InitStructure.ADC_DataAlign = ADC_DataAlign_Right;
-	ADC_InitStructure.ADC_Resolution = ADC_Resolution_12b;
-	ADC_InitStructure.ADC_ScanConvMode = ENABLE;
 	ADC_InitStructure.ADC_ContinuousConvMode = ENABLE;
+	ADC_InitStructure.ADC_DataAlign = ADC_DataAlign_Right;
+	ADC_InitStructure.ADC_ExternalTrigConv = ADC_ExternalTrigConv_T1_CC4;
 	ADC_InitStructure.ADC_ExternalTrigConvEdge = ADC_ExternalTrigConvEdge_None;
-	ADC_InitStructure.ADC_ExternalTrigConv = ADC_ExternalTrigConv_T1_CC1;
-	ADC_InitStructure.ADC_NbrOfConversion = 3;
+	ADC_InitStructure.ADC_Resolution = ADC_Resolution_12b;
+	ADC_InitStructure.ADC_ScanDirection = ADC_ScanDirection_Upward;
 	ADC_Init(ADC1, &ADC_InitStructure);
 
 	// ADC1 regular channels 1, 3 configuration
 
-	ADC_RegularChannelConfig(ADC1, ADC_Channel_4,  1, ADC_SampleTime_28Cycles);
-	ADC_RegularChannelConfig(ADC1, ADC_Channel_5,  2, ADC_SampleTime_28Cycles);
-	ADC_RegularChannelConfig(ADC1, ADC_Channel_6,  3, ADC_SampleTime_28Cycles);
-
-	// Enable DMA request after last transfer (Single-ADC mode)
-
-	ADC_DMARequestAfterLastTransferCmd(ADC1, ENABLE);
-
-	// Enable ADC1 DMA
-
-	ADC_DMACmd(ADC1, ENABLE);
+	ADC_ChannelConfig(ADC1, ADC_Channel_0, ADC_SampleTime_55_5Cycles);
+	ADC_ChannelConfig(ADC1, ADC_Channel_1, ADC_SampleTime_55_5Cycles);
+	ADC_ChannelConfig(ADC1, ADC_Channel_4, ADC_SampleTime_55_5Cycles);
 
 	// Enable ADC1
 	ADC_Cmd(ADC1, ENABLE);
+}
+
+
+//------------------------------------------------------------------------------------------------------------------------//
+void GPIO_ToggleBits(GPIO_TypeDef* GPIOx, uint16_t GPIO_Pin)
+{
+	uint8_t current_state = GPIO_ReadOutputDataBit( GPIOx , GPIO_Pin );
+
+	if (current_state == (uint8_t)Bit_SET)
+	{
+		GPIO_ResetBits(GPIOx, GPIO_Pin);
 	}
+	else
+	{
+		GPIO_SetBits(GPIOx, GPIO_Pin);
+	}
+}
