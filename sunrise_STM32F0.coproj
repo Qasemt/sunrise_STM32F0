@@ -66,6 +66,7 @@
     <ExcludeFile/>
   </Target>
   <Components path="./">
+    <Component id="30" name="C Library" path="" type="2"/>
     <Component id="46" name="M0 Cmsis Core" path="" type="2"/>
     <Component id="1079" name="cmsis_boot" path="" type="2"/>
     <Component id="1080" name="RCC" path="" type="2"/>
@@ -81,9 +82,9 @@
     <Component id="1100" name="USART" path="" type="2"/>
   </Components>
   <Files>
-    <File name="cmsis_core/core_cmInstr.h" path="cmsis_core/core_cmInstr.h" type="1"/>
-    <File name="cmsis_lib/source/stm32f0xx_usart.c" path="cmsis_lib/source/stm32f0xx_usart.c" type="1"/>
     <File name="cmsis_boot/startup/startup_stm32f0xx.s" path="cmsis_boot/startup/startup_stm32f0xx.s" type="1"/>
+    <File name="cmsis_lib/source/stm32f0xx_usart.c" path="cmsis_lib/source/stm32f0xx_usart.c" type="1"/>
+    <File name="cmsis_core/core_cmInstr.h" path="cmsis_core/core_cmInstr.h" type="1"/>
     <File name="cmsis_lib/include/stm32f0xx_adc.h" path="cmsis_lib/include/stm32f0xx_adc.h" type="1"/>
     <File name="cmsis_lib/source/stm32f0xx_tim.c" path="cmsis_lib/source/stm32f0xx_tim.c" type="1"/>
     <File name="cmsis_lib/include/stm32f0xx_rcc.h" path="cmsis_lib/include/stm32f0xx_rcc.h" type="1"/>
@@ -98,9 +99,10 @@
     <File name="cmsis_lib/include/stm32f0xx_usart.h" path="cmsis_lib/include/stm32f0xx_usart.h" type="1"/>
     <File name="cmsis_lib/source/stm32f0xx_misc.c" path="cmsis_lib/source/stm32f0xx_misc.c" type="1"/>
     <File name="cmsis_boot/stm32f0xx.h" path="cmsis_boot/stm32f0xx.h" type="1"/>
-    <File name="cmsis_lib/source/stm32f0xx_exti.c" path="cmsis_lib/source/stm32f0xx_exti.c" type="1"/>
-    <File name="cmsis_lib" path="" type="2"/>
+    <File name="syscalls/syscalls.c" path="syscalls/syscalls.c" type="1"/>
     <File name="cmsis_lib/source/stm32f0xx_gpio.c" path="cmsis_lib/source/stm32f0xx_gpio.c" type="1"/>
+    <File name="cmsis_lib" path="" type="2"/>
+    <File name="cmsis_lib/source/stm32f0xx_exti.c" path="cmsis_lib/source/stm32f0xx_exti.c" type="1"/>
     <File name="cmsis_lib/include/stm32f0xx_gpio.h" path="cmsis_lib/include/stm32f0xx_gpio.h" type="1"/>
     <File name="cmsis_core/core_cm0.h" path="cmsis_core/core_cm0.h" type="1"/>
     <File name="cmsis_lib/source/stm32f0xx_rcc.c" path="cmsis_lib/source/stm32f0xx_rcc.c" type="1"/>
@@ -108,15 +110,16 @@
     <File name="cmsis_lib/source" path="" type="2"/>
     <File name="cmsis_lib/include/stm32f0xx_exti.h" path="cmsis_lib/include/stm32f0xx_exti.h" type="1"/>
     <File name="stm32f0xx_conf.h" path="stm32f0xx_conf.h" type="1"/>
-    <File name="cmsis_lib/include/stm32f0xx_iwdg.h" path="cmsis_lib/include/stm32f0xx_iwdg.h" type="1"/>
+    <File name="syscalls" path="" type="2"/>
     <File name="cmsis_boot/system_stm32f0xx.h" path="cmsis_boot/system_stm32f0xx.h" type="1"/>
+    <File name="cmsis_lib/include/stm32f0xx_iwdg.h" path="cmsis_lib/include/stm32f0xx_iwdg.h" type="1"/>
     <File name="cmsis_lib/include/stm32f0xx_rtc.h" path="cmsis_lib/include/stm32f0xx_rtc.h" type="1"/>
     <File name="cmsis_lib/include" path="" type="2"/>
     <File name="cmsis_lib/source/stm32f0xx_dma.c" path="cmsis_lib/source/stm32f0xx_dma.c" type="1"/>
     <File name="cmsis_lib/include/stm32f0xx_tim.h" path="cmsis_lib/include/stm32f0xx_tim.h" type="1"/>
     <File name="cmsis_lib/include/stm32f0xx_dma.h" path="cmsis_lib/include/stm32f0xx_dma.h" type="1"/>
-    <File name="delay.c" path="delay.c" type="1"/>
     <File name="cmsis_lib/source/stm32f0xx_iwdg.c" path="cmsis_lib/source/stm32f0xx_iwdg.c" type="1"/>
+    <File name="delay.c" path="delay.c" type="1"/>
     <File name="cmsis_lib/source/stm32f0xx_adc.c" path="cmsis_lib/source/stm32f0xx_adc.c" type="1"/>
     <File name="main.c" path="main.c" type="1"/>
     <File name="cmsis_lib/include/stm32f0xx_syscfg.h" path="cmsis_lib/include/stm32f0xx_syscfg.h" type="1"/>
