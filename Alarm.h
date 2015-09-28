@@ -2,6 +2,7 @@
 #define __ALARM_H
 
 #define BKP_VALUE 0x32F
+#define MAX_PWM ((1<<16) - 1)
 
 void Clock_Init( void );
 static void RTC_Config( void );

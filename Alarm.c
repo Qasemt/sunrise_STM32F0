@@ -241,15 +241,58 @@ void RTC_AlarmShow(void)
 //------------------------------------------------------------------------------------------------------------------------//
 void WakeUpSequence( void )
 {
+	uint16_t i = 0;
+
+	for ( i = 0 ; i < MAX_PWM ; i++)
+	{
+		uint16_t g_pot_red   = i;
+		uint16_t g_pot_green = i;
+		uint16_t g_pot_blue  = i;
+
+		Set_PWM( g_pot_red , g_pot_green , g_pot_blue );
+		delay_nms(28);
+		IWDG_ReloadCounter();
+	}
+
 	uint16_t counter = 0;
 
 	GPIO_SetBits( GPIOC , GPIO_Pin_7);
 
-	for ( counter = 0 ; counter < 400 ; counter++ )
+	for ( counter = 0 ; counter < 100 ; counter++ )
 	{
 		delay_nms(300);
 		IWDG_ReloadCounter();
 	}
 
 	GPIO_ResetBits( GPIOC , GPIO_Pin_7 );
+
+	for ( counter = 0 ; counter < 100 ; counter++ )
+	{
+		delay_nms(300);
+		IWDG_ReloadCounter();
+	}
+
+	GPIO_SetBits( GPIOC , GPIO_Pin_7);
+
+	for ( counter = 0 ; counter < 100 ; counter++ )
+	{
+		delay_nms(300);
+		IWDG_ReloadCounter();
+	}
+
+	GPIO_ResetBits( GPIOC , GPIO_Pin_7 );
+
+	for ( counter = 0 ; counter < 100 ; counter++ )
+	{
+		delay_nms(300);
+		IWDG_ReloadCounter();
+	}
+
+	GPIO_SetBits( GPIOC , GPIO_Pin_7);
+
+	for ( counter = 0 ; counter < 1000 ; counter++ )
+	{
+		delay_nms(300);
+		IWDG_ReloadCounter();
+	}
 }

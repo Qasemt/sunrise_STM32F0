@@ -15,8 +15,6 @@
 
 //------------------------------------------------------------------------------------------------------------------------//
 
-// #define DEBUG_USB
-#define MAX_PWM ((1<<16) - 1)
 
 //------------------------------------------------------------------------------------------------------------------------//
 
@@ -72,10 +70,10 @@ int main(void)
 
 	IWDG_Enable();
 
-	uint16_t i = 0;
-
     while(1)
     {
+
+
     	if( alarm )
     	{
     		WakeUpSequence();
@@ -86,25 +84,8 @@ int main(void)
     		RTC_TimeRegulate();
     		setAlarm = 0;
     	}
-    	else
-		{
-    		if(i >= (MAX_PWM - 1000))
-    		{
-    			i = 0;
-    		}
-    		else
-    		{
-    			i += 1000;
-    		}
-    		uint16_t g_pot_red   = i;
-			uint16_t g_pot_green = i;
-			uint16_t g_pot_blue  = i;
 
-    		Set_PWM( g_pot_red , g_pot_green , g_pot_blue );
-
-    		delay_nms(200);
-		}
-
+		delay_nms(200);
 		IWDG_ReloadCounter();
     }
 }
