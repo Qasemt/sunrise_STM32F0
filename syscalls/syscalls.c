@@ -8,6 +8,7 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 
+// #define DEBUG_USB
 #undef errno
 extern int errno;
 extern int  _end;
@@ -90,11 +91,19 @@ int _write(int file, char *ptr, int len)
 	(void)file;
 	for ( txCount = 0; txCount < len; txCount++)
 	{
+#ifdef DEBUG_USB
 		USART_SendData(USART2, ptr[txCount]);   //Don't forget to include "stm32f10x_usart.h"
 		/* Loop until the end of transmission */
 		while(USART_GetFlagStatus(USART2, USART_FLAG_TC) == RESET)
 		{
 		}
+#else
+		USART_SendData(USART1, ptr[txCount]);   //Don't forget to include "stm32f10x_usart.h"
+		/* Loop until the end of transmission */
+		while(USART_GetFlagStatus(USART1, USART_FLAG_TC) == RESET)
+		{
+		}
+#endif
 	}
 	return len;
 }

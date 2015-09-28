@@ -1,23 +1,27 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <history>
    <processor signature="4.9.3 -mcpu=cortex-m0 -mthumb -g -nostartfiles -Map=sunrise_STM32F0.map -O0 --gc-sections -LC:\CooCox\CoIDE\configuration\ProgramData\sunrise_STM32F0 -TC:\CooCox\CoIDE\configuration\ProgramData\sunrise_STM32F0/arm-gcc-link.ld -g">
-      <target file="sunrise_STM32F0.elf" lastModified="14f84e30aed">
-         <source file="..\obj\delay.o" lastModified="14f84e3042d"/>
-         <source file="..\obj\stm32f0xx_rcc.o" lastModified="14f84e30490"/>
-         <source file="..\obj\stm32f0xx_adc.o" lastModified="14f84e304dc"/>
-         <source file="..\obj\stm32f0xx_iwdg.o" lastModified="14f84e30514"/>
-         <source file="..\obj\main.o" lastModified="14f84e3056a"/>
-         <source file="..\obj\startup_stm32f0xx.o" lastModified="14f84e30574"/>
-         <source file="..\obj\stm32f0xx_dma.o" lastModified="14f84e305af"/>
-         <source file="..\obj\stm32f0xx_gpio.o" lastModified="14f84e305f2"/>
-         <source file="..\obj\stm32f0xx_rtc.o" lastModified="14f84e3066c"/>
-         <source file="..\obj\syscalls.o" lastModified="14f84e306b4"/>
-         <source file="..\obj\stm32f0xx_usart.o" lastModified="14f84e3072d"/>
-         <source file="..\obj\stm32f0xx_tim.o" lastModified="14f84e307ea"/>
-         <source file="..\obj\system_stm32f0xx.o" lastModified="14f84e30820"/>
-         <source file="..\obj\stm32f0xx_exti.o" lastModified="14f84e30859"/>
-         <source file="..\obj\stm32f0xx_syscfg.o" lastModified="14f84e30893"/>
-         <source file="..\obj\stm32f0xx_misc.o" lastModified="14f84e308c8"/>
+      <target file="sunrise_STM32F0.elf" lastModified="14fc61039ab">
+         <source file="..\obj\delay.o" lastModified="14fc6102e2e"/>
+         <source file="..\obj\stm32f0xx_rcc.o" lastModified="14fc6102ea4"/>
+         <source file="..\obj\USART_Init.o" lastModified="14fc6102f25"/>
+         <source file="..\obj\stm32f0xx_adc.o" lastModified="14fc6102f8c"/>
+         <source file="..\obj\stm32f0xx_iwdg.o" lastModified="14fc6102fca"/>
+         <source file="..\obj\main.o" lastModified="14fc6103023"/>
+         <source file="..\obj\startup_stm32f0xx.o" lastModified="14fc6103030"/>
+         <source file="..\obj\GPIO.o" lastModified="14fc6103094"/>
+         <source file="..\obj\stm32f0xx_dma.o" lastModified="14fc61030e7"/>
+         <source file="..\obj\Alarm.o" lastModified="14fc6103391"/>
+         <source file="..\obj\stm32f0xx_gpio.o" lastModified="14fc61033ef"/>
+         <source file="..\obj\stm32f0xx_rtc.o" lastModified="14fc610348c"/>
+         <source file="..\obj\syscalls.o" lastModified="14fc61034d9"/>
+         <source file="..\obj\stm32f0xx_usart.o" lastModified="14fc6103557"/>
+         <source file="..\obj\stm32f0xx_tim.o" lastModified="14fc610360f"/>
+         <source file="..\obj\system_stm32f0xx.o" lastModified="14fc610364d"/>
+         <source file="..\obj\stm32f0xx_exti.o" lastModified="14fc610368b"/>
+         <source file="..\obj\stm32f0xx_syscfg.o" lastModified="14fc61036cd"/>
+         <source file="..\obj\stm32f0xx_pwr.o" lastModified="14fc610370f"/>
+         <source file="..\obj\stm32f0xx_misc.o" lastModified="14fc610374a"/>
       </target>
    </processor>
 </history>
